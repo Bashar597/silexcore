@@ -1,0 +1,920 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="canonical" href="https://silexcore.com/checkout" />
+  <title>Checkout — SilexCore Technologies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EDDGD4SLDZ"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EDDGD4SLDZ');</script>
+  <style>
+  .co-page { padding: 130px 0 88px; }
+  .co-grid { display: grid; grid-template-columns: 1fr 380px; gap: 60px; align-items: start; }
+  .co-title { font-size: clamp(24px,4vw,36px); font-weight: 600; margin-bottom: 28px; letter-spacing: -.01em; }
+
+  /* Auth gate */
+  .co-auth { border: 1px solid var(--t-border); border-radius: 3px; overflow: hidden; margin-bottom: 28px; }
+  .co-auth-tabs { display: grid; grid-template-columns: 1fr 1fr; }
+  .co-auth-tab { padding: 14px; font-size: 14px; font-weight: 500; text-align: center; cursor: pointer; border: none; background: var(--t-bg-2); color: var(--t-text-2); border-bottom: 2px solid transparent; transition: background .15s, color .15s; }
+  .co-auth-tab.active { background: var(--t-bg-card); color: var(--t-text); border-bottom-color: var(--gold-warm); }
+  .co-auth-body { padding: 22px 24px; }
+
+  /* Logged-in info blocks */
+  .co-info-block { border: 1px solid var(--t-border); border-radius: 3px; margin-bottom: 12px; overflow: hidden; }
+  .co-info-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; background: var(--t-bg-2); border-bottom: 1px solid var(--t-border); }
+  .co-info-label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--t-text-muted); }
+  .co-info-edit-btn { background: none; border: none; font-size: 13px; color: var(--gold-warm); cursor: pointer; padding: 0; text-decoration: underline; }
+  .co-info-body { padding: 13px 16px; font-size: 15px; line-height: 1.6; }
+  .co-info-edit-form { padding: 16px; border-top: 1px solid var(--t-border); display: none; }
+
+  /* Form area */
+  .co-section-label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--t-text-muted); margin: 26px 0 14px; display: block; }
+  .co-payment { padding: 20px; border: 1px solid var(--t-border); background: var(--t-bg-2); border-radius: 3px; margin-top: 20px; }
+
+  /* Order summary */
+  .co-summary { position: sticky; top: 96px; border: 1px solid var(--t-border); border-radius: 3px; overflow: hidden; }
+  .co-summary-head { padding: 14px 18px; font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; border-bottom: 1px solid var(--t-border); background: var(--t-bg-2); }
+  .co-items { padding: 0 18px; }
+  .co-item { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--t-border); }
+  .co-item:last-child { border-bottom: none; }
+  .co-item img { width: 52px; height: 52px; object-fit: cover; border-radius: 3px; background: var(--t-bg-2); }
+  .co-item-name { font-size: 13px; font-weight: 500; line-height: 1.35; }
+  .co-item-var { font-size: 11px; color: var(--t-text-muted); margin-top: 3px; }
+  .co-item-price { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .co-pricing { padding: 14px 18px; border-top: 1px solid var(--t-border); background: var(--t-bg-2); }
+  .co-pr { display: flex; justify-content: space-between; font-size: 14px; color: var(--t-text-2); padding: 4px 0; }
+  .co-pr-total { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; color: var(--t-text); padding: 12px 0 4px; border-top: 1px solid var(--t-border); margin-top: 8px; }
+
+  /* Geo dropdown */
+  #geo-dropdown { position: absolute; z-index: 9999; background: var(--t-bg-card,#fff); border: 1px solid var(--t-border,#ddd); border-radius: 3px; box-shadow: 0 8px 24px rgba(0,0,0,.12); max-height: 220px; overflow-y: auto; }
+  .geo-item { padding: 9px 14px; font-size: 13px; color: var(--t-text,#222); cursor: pointer; border-bottom: 1px solid var(--t-border,#eee); line-height: 1.35; }
+  .geo-item:last-child { border-bottom: none; }
+  .geo-item:hover,.geo-item.active { background: rgba(212,160,23,.09); }
+  .geo-item strong { color: var(--t-text,#222); font-weight: 500; }
+  .geo-item span { font-size: 11px; color: var(--t-text-muted,#999); display: block; margin-top: 1px; }
+
+  @media (max-width: 900px) {
+    .co-grid { grid-template-columns: 1fr; gap: 36px; }
+    .co-summary { position: static; order: -1; }
+  }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand" aria-label="SilexCore Technologies home"><svg class="swoosh-svg" viewBox="0 0 48 32" fill="none" aria-hidden="true"><path d="M2 24 Q 14 4, 30 12 T 46 8" stroke="#e8b923" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="44" cy="9" r="2.5" fill="#e8b923"/></svg><span class="brand-text">SilexCore<span class="tech">Technologies</span></span></a>
+    <nav class="primary-nav" aria-label="Primary"><div class="nav-item has-dropdown"><a href="shop.html" class="nav-link">Products <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown dropdown-products"><a href="product-conductive-paint.html" class="dropdown-product"><strong>Conductive Paint</strong><span>0.1&ndash;0.5 &Omega;/sq</span></a><a href="product-premium-conductive-paint.html" class="dropdown-product"><strong>Premium Conductive Paint</strong><span>54 dB EMF shielding</span></a><a href="product-conductive-silicone.html" class="dropdown-product"><strong>Conductive Silicone</strong><span>5&ndash;35 &Omega;/sq</span></a><a href="product-conductive-glue.html" class="dropdown-product"><strong>Conductive Glue</strong><span>0.1&ndash;0.8 &Omega;/sq</span></a></div></div><div class="nav-item has-dropdown"><a href="shop.html" class="nav-link">Shop <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown"><a href="for-makers.html">For Makers &amp; DIY</a><a href="for-labs.html">For Education &amp; Labs</a><a href="for-industry.html">For Industry &amp; OEM</a></div></div><div class="nav-item has-dropdown"><a href="resources.html" class="nav-link">Learn <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown"><a href="resources.html#guides">Project Guides</a><a href="resources.html">Technical Library</a><a href="resources.html#sds">Safety Data Sheets</a></div></div><div class="nav-item has-dropdown"><a href="about.html" class="nav-link">About <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown"><a href="about.html">Company</a><a href="about.html">Technology</a><a href="about.html">Sustainability</a></div></div><div class="nav-item has-dropdown"><a href="faq.html" class="nav-link">Support <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown"><a href="resources.html#guides">Usage Instructions</a><a href="resources.html#sds">Safety Data Sheets</a><a href="faq.html">FAQ</a><a href="shipping.html">Shipping &amp; Returns Policy</a><a href="returns.html">Returns</a><a href="contact.html">Contact</a></div></div></nav>
+    <div class="header-actions">
+      <a href="account.html" class="account-nav-btn" aria-label="Account"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="account-nav-label">Account</span></a>
+      <a href="#" class="cart-button" aria-label="Open cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>Cart <span class="cart-count">0</span></a>
+    </div>
+    <button class="mobile-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<nav class="mobile-nav" aria-label="Mobile">
+  <ul>
+    <li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li>
+    <li><a href="for-makers.html">For Makers</a></li>
+    <li><a href="for-labs.html">For Labs</a></li>
+    <li><a href="for-industry.html">For Industry</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="mobile-actions">
+    <a href="account.html">Account / Sign In</a>
+    <a href="#" class="cart-button">Cart (<span class="cart-count">0</span>)</a>
+  </div>
+</nav>
+
+<section class="section co-page">
+  <div class="wrap">
+    <div id="checkout-content">
+      <div class="co-grid">
+
+        <!-- ── LEFT ──────────────────────────────────── -->
+        <div>
+          <h1 class="co-title">Checkout</h1>
+
+          <!-- AUTH GATE (shown only when not logged in) -->
+          <div id="co-auth" class="co-auth" style="display:none;">
+            <div class="co-auth-tabs">
+              <button class="co-auth-tab active" id="tab-signin">Sign In</button>
+              <button class="co-auth-tab" id="tab-guest">Continue as Guest</button>
+            </div>
+            <!-- Sign-in panel -->
+            <div id="auth-signin-body" class="co-auth-body">
+              <form id="co-login-form" class="form-stack" style="margin:0;" novalidate>
+                <div class="form-field"><label for="co-email-login">Email</label><input type="email" id="co-email-login" placeholder="Email address" required /></div>
+                <div class="form-field"><label for="co-pass-login">Password</label><input type="password" id="co-pass-login" placeholder="Password" required /></div>
+                <div id="co-login-msg" style="display:none;padding:11px 14px;font-size:13px;border:1px solid;border-radius:2px;margin-bottom:4px;"></div>
+                <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;">Sign In <span class="arrow">→</span></button>
+              </form>
+              <p style="margin-top:14px;font-size:13px;color:var(--t-text-muted);text-align:center;">No account? <a href="account.html" style="color:var(--gold-warm);">Create one →</a></p>
+            </div>
+            <!-- Guest panel -->
+            <div id="auth-guest-body" class="co-auth-body" style="display:none;">
+              <p style="font-size:14px;color:var(--t-text-2);margin-bottom:16px;">Fill in your details below and place your order without creating an account.</p>
+              <button id="co-continue-guest" class="btn btn-ghost" style="width:100%;justify-content:center;">Continue as Guest <span class="arrow">→</span></button>
+            </div>
+          </div>
+
+          <!-- LOGGED-IN: Contact + Address display blocks -->
+          <div id="co-loggedin-blocks" style="display:none;">
+            <!-- Contact block -->
+            <div class="co-info-block">
+              <div class="co-info-head">
+                <span class="co-info-label">Contact</span>
+                <button class="co-info-edit-btn" id="btn-edit-contact">Edit</button>
+              </div>
+              <div class="co-info-body" id="contact-display"></div>
+              <div class="co-info-edit-form" id="contact-edit-form">
+                <div class="form-stack" style="margin:0;">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div class="form-field"><label>First Name</label><input type="text" id="li-first" /></div>
+                    <div class="form-field"><label>Last Name</label><input type="text" id="li-last" /></div>
+                  </div>
+                  <div class="form-field"><label>Email</label><input type="email" id="li-email" /></div>
+                  <div class="form-field"><label>Phone <span style="font-size:11px;color:var(--t-text-muted)">(optional)</span></label><input type="tel" id="li-phone" placeholder="Phone number" /></div>
+                  <div style="display:flex;gap:10px;">
+                    <button type="button" class="btn btn-gold btn-sm" id="btn-save-contact">Save</button>
+                    <button type="button" class="btn btn-ghost btn-sm" id="btn-cancel-contact">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Address block -->
+            <div class="co-info-block">
+              <div class="co-info-head">
+                <span class="co-info-label">Ship to</span>
+                <button class="co-info-edit-btn" id="btn-edit-address">Change</button>
+              </div>
+              <div class="co-info-body" id="address-display"></div>
+              <div class="co-info-edit-form" id="address-edit-form">
+                <div class="form-stack" style="margin:0;">
+                  <div class="form-field">
+                    <label>New Delivery Address</label>
+                    <input type="text" id="li-addr-search" placeholder="Start typing your address…" autocomplete="off" />
+                    <div id="li-addr-confirm" style="display:none;margin-top:8px;padding:10px 14px;background:rgba(212,160,23,.08);border:1px solid var(--gold-warm);border-radius:2px;font-size:13px;"></div>
+                  </div>
+                  <div class="form-field">
+                    <label>Apt / Suite / Unit <span style="font-size:11px;color:var(--t-text-muted)">(optional)</span></label>
+                    <input type="text" id="li-addr2" placeholder="Apt / Unit / Suite / etc. (optional)" autocomplete="address-line2" />
+                  </div>
+                  <div style="display:flex;gap:10px;">
+                    <button type="button" class="btn btn-gold btn-sm" id="btn-save-address">Use This Address</button>
+                    <button type="button" class="btn btn-ghost btn-sm" id="btn-cancel-address">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MAIN FORM (shown after auth decision) -->
+          <div id="co-form-wrap" style="display:none;">
+            <!-- Guest-only fields -->
+            <div id="guest-fields" style="display:none;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                <div class="form-field"><label for="first-name">First Name</label><input type="text" id="first-name" name="first_name" required placeholder="First name" /></div>
+                <div class="form-field"><label for="last-name">Last Name</label><input type="text" id="last-name" name="last_name" required placeholder="Last name" /></div>
+              </div>
+              <div class="form-field"><label for="email">Email Address</label><input type="email" id="email" name="email" required placeholder="Email address" /></div>
+              <div class="form-field"><label for="phone">Phone <span style="font-size:11px;color:var(--t-text-muted)">(optional)</span></label><input type="tel" id="phone" name="phone" placeholder="Phone number" /></div>
+              <!-- Geoapify autocomplete -->
+              <div id="address-autocomplete-wrap" class="form-field">
+                <label for="address-search">Delivery Address</label>
+                <input type="text" id="address-search" placeholder="Start typing your address…" autocomplete="off" />
+                <input type="hidden" id="address" name="address" />
+                <input type="hidden" id="city" name="city" />
+                <input type="hidden" id="state" name="state" />
+                <input type="hidden" id="zip" name="zip" />
+                <input type="hidden" id="country" name="country" value="United States" />
+                <div id="address-confirm" style="display:none;margin-top:8px;padding:10px 14px;background:rgba(212,160,23,.08);border:1px solid var(--gold-warm);border-radius:2px;font-size:13px;"></div>
+              </div>
+              <div class="form-field"><label for="address2">Apt / Suite / Unit <span style="font-size:11px;color:var(--t-text-muted)">(optional)</span></label><input type="text" id="address2" name="address2" placeholder="Apt / Unit / Suite / etc. (optional)" autocomplete="address-line2" /></div>
+              <!-- Manual fallback -->
+              <div id="address-manual-wrap" style="display:none;">
+                <div class="form-field"><label>Street Address</label><input type="text" id="address-manual" placeholder="Street address" autocomplete="street-address" /></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div class="form-field"><label>City</label><input type="text" id="city-manual" placeholder="City" /></div>
+                  <div class="form-field"><label>State</label><input type="text" id="state-manual" placeholder="NC" maxlength="2" /></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div class="form-field"><label>ZIP</label><input type="text" id="zip-manual" placeholder="ZIP" maxlength="10" inputmode="numeric" /></div>
+                  <div class="form-field"><label>Country</label><input type="text" id="country-manual" value="United States" /></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipping rates (auto-loaded from address ZIP, hidden until fetched) -->
+            <input type="hidden" id="ship-zip" name="ship_zip" />
+            <span class="co-section-label" id="shipping-section-label" style="display:none;">Shipping</span>
+            <div id="shipping-rates-wrap" style="display:none;"><div id="shipping-rates-list"></div></div>
+            <div id="shipping-note" style="font-size:13px;color:var(--t-text-muted);margin-top:4px;"></div>
+
+            <!-- Notes (always visible) -->
+            <div class="form-field" style="margin-top:6px;">
+              <label for="notes">Order Notes <span style="font-size:11px;color:var(--t-text-muted)">(optional)</span></label>
+              <textarea id="notes" name="notes" rows="2" style="min-height:56px;resize:vertical;" placeholder="Any special instructions for your order..."></textarea>
+            </div>
+
+            <!-- Payment -->
+            <div class="co-payment">
+              <div class="t-eyebrow plain" style="margin-bottom:10px;">Payment</div>
+              <p style="font-size:14px;color:var(--t-text-2);line-height:1.6;margin-bottom:10px;">You'll be securely redirected to complete payment after placing your order. Accepts all major credit and debit cards.</p>
+              <div style="font-family:var(--font-mono);font-size:11px;color:var(--t-text-muted);">Secured by Zoho Payments · SSL encrypted</div>
+            </div>
+
+            <div id="form-error" style="display:none;padding:14px 18px;background:rgba(224,92,92,.08);border:1px solid #e05c5c;border-radius:2px;color:#e05c5c;font-size:14px;font-weight:500;margin-top:8px;"></div>
+            <button type="button" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:8px;opacity:0.5;cursor:not-allowed;" id="place-order-btn" disabled>
+              Proceed to Payment <span class="arrow">→</span>
+            </button>
+            <div id="validation-hint" style="font-size:12px;color:var(--t-text-muted);text-align:center;margin-top:6px;">Complete all required fields and select a shipping rate to continue.</div>
+            <p style="font-size:12px;color:var(--t-text-muted);text-align:center;margin-top:12px;">By placing your order you agree to our <a href="privacy.html" style="color:var(--gold-warm);">Terms &amp; Privacy Policy</a>.</p>
+          </div>
+        </div>
+
+        <!-- ── RIGHT: Order Summary ──────────────────── -->
+        <div>
+          <div class="co-summary">
+            <div class="co-summary-head">Order Summary</div>
+            <div class="co-items" id="order-items"></div>
+            <div class="co-pricing">
+              <div class="co-pr"><span>Subtotal</span><span id="order-subtotal">—</span></div>
+              <div class="co-pr"><span>Shipping</span><span id="order-shipping">—</span></div>
+              <div class="co-pr"><span>Estimated Tax</span><span id="order-tax">—</span></div>
+              <div class="co-pr-total"><span>Total</span><span id="order-total">—</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand"><a href="index.html" class="brand"><svg class="swoosh-svg" viewBox="0 0 48 32" fill="none" aria-hidden="true"><path d="M2 24 Q 14 4, 30 12 T 46 8" stroke="#e8b923" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="44" cy="9" r="2.5" fill="#e8b923"/></svg><span class="brand-text">SilexCore<span class="tech">Technologies</span></span></a><div class="brand-statement">Made in the<br><span>U.S.A.</span></div><div class="footer-contact">Charlotte, NC 28277<br><a href="tel:+17868165748">+1 (786) 816-5748</a><br><a href="mailto:info@silexcore.com">info@silexcore.com</a></div></div>
+      <div class="footer-col"><h4>Shop</h4><ul><li><a href="product-conductive-paint.html">Conductive Paint</a></li><li><a href="product-premium-conductive-paint.html">Premium Paint</a></li><li><a href="product-conductive-silicone.html">Conductive Silicone</a></li><li><a href="product-conductive-glue.html">Conductive Glue</a></li><li><a href="shop.html">All Products</a></li></ul></div>
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li><li><a href="account.html">Account</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+      <div class="footer-col"><h4>Resources</h4><ul><li><a href="resources.html#sds">Safety Data Sheets</a></li><li><a href="resources.html#guides">Usage Guides</a></li><li><a href="shipping.html">Shipping &amp; Returns Policy</a></li><li><a href="privacy.html">Privacy &amp; Terms</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 SilexCore Technologies · All Rights Reserved</div></div>
+    <div class="footer-disclaimer">SilexCore products are water-based and formulated without heavy metals. SilexCore Technologies is a registered trademark.</div>
+  </div>
+</footer>
+
+<a href="#" class="back-to-top" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg></a>
+<div class="cart-overlay"></div>
+<aside class="cart-drawer" aria-label="Shopping cart">
+  <div class="cart-header"><h3>Your Cart</h3><button class="cart-close" aria-label="Close cart"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div class="cart-body"></div>
+  <div class="cart-footer"><div class="cart-total"><span class="label">Subtotal</span><span class="amount">$0.00</span></div><a href="checkout.html" class="btn btn-gold cart-checkout">Checkout <span class="arrow">→</span></a></div>
+</aside>
+
+<script src="assets/js/main.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ── Config ─────────────────────────────── */
+  var CART_KEY = 'silexcore_cart_v1';
+  var GEOKEY   = 'e9753a78043f43548e89e1399b608a04';
+
+  /* Tax: only charge for NC orders (nexus state) — 6.75% combined state+county avg */
+
+  /* Runtime state */
+  var selectedShipping = null;
+  var isLoggedIn = false;
+  var checkoutData = { first_name:'',last_name:'',email:'',phone:'',address:'',address2:'',city:'',state:'',zip:'',country:'United States' };
+
+  /* ── Helpers ─────────────────────────────── */
+  function getCart() { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch(e) { return []; } }
+  function sumCart(c) { return c.reduce(function(s,i){ return s+(parseInt(i.qty,10)||1)*(parseFloat(i.price)||0); },0); }
+  function genRef() { return 'SC-'+Math.random().toString(36).substr(2,6).toUpperCase(); }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function totalWeightOz(cart) {
+    return cart.reduce(function(s,i){
+      var v = (i.variantLabel||'').toLowerCase();
+      var w = v.indexOf('4 oz')!==-1 ? 5.5 : v.indexOf('2 oz')!==-1 ? 3.5 : 2.3;
+      return s + (i.qty||1) * w;
+    }, 0);
+  }
+  function taxRate() {
+    var st = (checkoutData.state || (document.getElementById('state') ? document.getElementById('state').value : '') || '').trim().toUpperCase();
+    return st === 'NC' ? 0.0675 : 0;
+  }
+
+  /* ── Order summary rendering ─────────────── */
+  function renderSummary() {
+    var cart = getCart();
+    var itemsEl = document.getElementById('order-items');
+    if (!itemsEl) return;
+
+    if (cart.length === 0) {
+      document.getElementById('checkout-content').innerHTML =
+        '<div style="padding:80px 0;text-align:center;">' +
+        '<p style="color:var(--t-text-2);margin-bottom:24px;">Your cart is empty.</p>' +
+        '<a href="shop.html" class="btn btn-gold">Shop Products <span class="arrow">→</span></a></div>';
+      return;
+    }
+
+    itemsEl.innerHTML = cart.map(function(item) {
+      return '<div class="co-item">' +
+        '<img src="'+esc(item.image)+'" alt="'+esc(item.name)+'" onerror="this.style.background=\'var(--t-bg-2)\'">' +
+        '<div><div class="co-item-name">'+esc(item.name)+'</div>' +
+        '<div class="co-item-var">'+esc(item.variantLabel)+' &times; '+(parseInt(item.qty,10)||1)+'</div></div>' +
+        '<div class="co-item-price">$'+((parseFloat(item.price)||0)*(parseInt(item.qty,10)||1)).toFixed(2)+'</div>' +
+        '</div>';
+    }).join('');
+
+    updateTotals();
+  }
+
+  function updateTotals() {
+    var cart = getCart();
+    var sub  = sumCart(cart);
+    var ship = selectedShipping ? selectedShipping.rate : 0;
+    var rate = taxRate();
+    var tax  = (sub + ship) * rate;
+    var total = sub + ship + tax;
+
+    var subEl  = document.getElementById('order-subtotal');
+    var shipEl = document.getElementById('order-shipping');
+    var taxEl  = document.getElementById('order-tax');
+    var totEl  = document.getElementById('order-total');
+
+    if (subEl)  subEl.textContent  = '$' + sub.toFixed(2);
+    if (shipEl) shipEl.textContent = selectedShipping ? '$' + ship.toFixed(2) : '—';
+    if (taxEl)  taxEl.textContent  = rate > 0 ? '$' + tax.toFixed(2) : '—';
+    if (totEl)  totEl.textContent  = '$' + total.toFixed(2);
+  }
+
+  /* ── Shipping rates ──────────────────────── */
+  function fetchRates(zip) {
+    var cart   = getCart();
+    var wrapEl = document.getElementById('shipping-rates-wrap');
+    var listEl = document.getElementById('shipping-rates-list');
+    var noteEl = document.getElementById('shipping-note');
+    var shippingLabel = document.getElementById('shipping-section-label');
+
+    if (noteEl) noteEl.textContent = '';
+    listEl.innerHTML = '<p style="font-size:13px;color:var(--t-text-muted);padding:8px 0;">Loading rates…</p>';
+    wrapEl.style.display = 'block';
+    if (shippingLabel) shippingLabel.style.display = 'block';
+    selectedShipping = null; updateTotals();
+
+    var body = new FormData();
+    body.append('zip', zip);
+    body.append('weight_oz', totalWeightOz(cart));
+
+    fetch('api/shipping.php', { method:'POST', body:body })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d.ok || !d.rates || !d.rates.length) {
+          listEl.innerHTML = '<p style="font-size:13px;color:#e05c5c;padding:8px 0;">'+(d.error||'No rates found for this ZIP.')+' <button onclick="triggerRates(document.getElementById(\'ship-zip\').value)" style="background:none;border:none;color:var(--gold-warm);cursor:pointer;font-size:13px;text-decoration:underline;">Retry →</button></p>';
+          return;
+        }
+        var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+        d.rates.forEach(function(r,i){
+          var rid='rate-'+i;
+          html += '<label for="'+rid+'" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--t-border);border-radius:2px;cursor:pointer;background:var(--t-bg-card);" class="rate-option">'+
+            '<input type="radio" id="'+rid+'" name="shipping_rate" value="'+i+'" data-rate="'+r.rate+'" data-service="'+r.service+'" style="accent-color:var(--gold-warm);flex-shrink:0;" />'+
+            '<span style="flex:1;font-size:13px;">'+r.service+'</span>'+
+            '<span style="font-weight:600;font-size:14px;white-space:nowrap;">$'+r.rate+'</span></label>';
+        });
+        html += '</div>';
+        listEl.innerHTML = html;
+
+        listEl.querySelectorAll('input[type=radio]').forEach(function(radio){
+          radio.addEventListener('change', function(){
+            selectedShipping = { service:this.dataset.service, rate:parseFloat(this.dataset.rate) };
+            updateTotals();
+            if (window._checkCanProceed) window._checkCanProceed();
+            listEl.querySelectorAll('.rate-option').forEach(function(el){ el.style.borderColor='var(--t-border)'; });
+            this.closest('.rate-option').style.borderColor = 'var(--gold-warm)';
+          });
+        });
+      })
+      .catch(function(){
+        listEl.innerHTML = '<p style="font-size:13px;color:#e05c5c;padding:8px 0;">Could not fetch rates. <button onclick="triggerRates(document.getElementById(\'ship-zip\').value)" style="background:none;border:none;color:var(--gold-warm);cursor:pointer;font-size:13px;text-decoration:underline;">Retry →</button></p>';
+      });
+  }
+
+  /* ── Place order ─────────────────────────── */
+  function doPlaceOrder() {
+    var cart = getCart();
+    if (!cart.length) return;
+
+    var errEl = document.getElementById('form-error');
+    function showError(msg) {
+      errEl.textContent = msg; errEl.style.display = 'block';
+      errEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+
+    var firstName, lastName, email, address;
+
+    var address2;
+    if (isLoggedIn) {
+      firstName = checkoutData.first_name;
+      lastName  = checkoutData.last_name;
+      email     = checkoutData.email;
+      address   = checkoutData.address;
+      address2  = checkoutData.address2 || '';
+    } else {
+      firstName = (document.getElementById('first-name').value||'').trim();
+      lastName  = (document.getElementById('last-name').value||'').trim();
+      email     = (document.getElementById('email').value||'').trim();
+      address   = (document.getElementById('address').value||'').trim();
+      address2  = (document.getElementById('address2').value||'').trim();
+    }
+
+    if (!firstName || !lastName) { showError('Please enter your full name.'); return; }
+    if (!email)    { showError('Please enter your email address.'); return; }
+    if (!address)  { showError('Please enter your delivery address.'); if (!isLoggedIn) document.getElementById('address-search').focus(); return; }
+    if (!selectedShipping) { showError('Please select a shipping option before proceeding.'); document.getElementById('shipping-rates-wrap').scrollIntoView({ behavior:'smooth', block:'center' }); return; }
+
+    errEl.style.display = 'none';
+    var btn = document.getElementById('place-order-btn');
+    btn.disabled = true; btn.textContent = 'Processing…';
+
+    var ref       = genRef();
+    var sub       = sumCart(cart);
+    var ship      = selectedShipping ? selectedShipping.rate : 0;
+    var tax       = (sub + ship) * taxRate();
+    var total     = sub + ship + tax;
+    var shipLabel = selectedShipping ? selectedShipping.service : '';
+
+    // Collect address fields
+    var city    = isLoggedIn ? checkoutData.city    : (document.getElementById('city').value||'');
+    var state   = isLoggedIn ? checkoutData.state   : (document.getElementById('state').value||'');
+    var zip     = isLoggedIn ? checkoutData.zip     : (document.getElementById('zip').value||'');
+    var country = isLoggedIn ? checkoutData.country : (document.getElementById('country').value||'United States');
+    var phone   = isLoggedIn ? checkoutData.phone   : (document.getElementById('phone')||{value:''}).value;
+    var notes   = (document.getElementById('notes')||{value:''}).value;
+
+    // Step 1: Get Zoho payment session FIRST (so we have session_id before saving)
+    var payBody = new FormData();
+    payBody.append('amount',        total.toFixed(2));
+    payBody.append('currency',      'USD');
+    payBody.append('reference',     ref);
+    payBody.append('email',         email);
+    payBody.append('customer_name', firstName + ' ' + lastName);
+    payBody.append('phone',         phone);
+    payBody.append('items',         JSON.stringify(cart));
+
+    fetch('api/zoho-payment.php', { method:'POST', body:payBody })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.ok && d.payment_url) {
+
+          // Step 2: Save order with ALL fields including session_id in ONE call
+          var orderBody = new FormData();
+          orderBody.append('reference',          ref);
+          orderBody.append('customer_name',      firstName + ' ' + lastName);
+          orderBody.append('email',              email);
+          orderBody.append('phone',              phone);
+          orderBody.append('address',            address);
+          orderBody.append('address2',           address2);
+          orderBody.append('city',               city);
+          orderBody.append('state',              state);
+          orderBody.append('zip',                zip);
+          orderBody.append('country',            country);
+          orderBody.append('items',              JSON.stringify(cart));
+          orderBody.append('subtotal',           sub.toFixed(2));
+          orderBody.append('shipping',           ship.toFixed(2));
+          orderBody.append('tax',                tax.toFixed(2));
+          orderBody.append('total',              total.toFixed(2));
+          orderBody.append('shipping_service',   shipLabel);
+          orderBody.append('notes',              notes);
+          orderBody.append('payment_session_id', d.session_id || '');
+
+          // Step 3: Save order — only redirect if save SUCCEEDS
+          fetch('api/save-order.php', { method:'POST', body:orderBody })
+            .then(function(r){ return r.json(); })
+            .then(function(saveResult){
+              if (!saveResult.ok) {
+                btn.disabled = false; btn.innerHTML = 'Proceed to Payment <span class="arrow">→</span>';
+                showError('Could not save your order. Please try again.');
+                return;
+              }
+              // Order saved — clear cart and redirect to payment
+              localStorage.removeItem(CART_KEY);
+              document.querySelectorAll('.cart-count').forEach(function(el){ el.textContent='0'; });
+              window.location.href = d.payment_url;
+            })
+            .catch(function(){
+              btn.disabled = false; btn.innerHTML = 'Proceed to Payment <span class="arrow">→</span>';
+              showError('Could not save your order to our system. Please check your connection and try again.');
+            });
+
+        } else {
+          btn.disabled = false; btn.innerHTML = 'Proceed to Payment <span class="arrow">→</span>';
+          showError(d.error || 'Could not connect to payment provider. Please try again.');
+        }
+      })
+      .catch(function(){
+        btn.disabled = false; btn.innerHTML = 'Proceed to Payment <span class="arrow">→</span>';
+        showError('Connection error. Please check your internet and try again.');
+      });
+  }
+
+  /* ── Auth gate logic ─────────────────────── */
+  function showGuestForm() {
+    document.getElementById('co-auth').style.display = 'none';
+    document.getElementById('guest-fields').style.display = 'block';
+    document.getElementById('co-form-wrap').style.display = 'block';
+  }
+
+  function applyLoggedInState(d) {
+    isLoggedIn = true;
+    checkoutData.first_name = d.first_name || '';
+    checkoutData.last_name  = d.last_name  || '';
+    checkoutData.email      = d.email      || '';
+    checkoutData.phone      = d.phone      || '';
+    checkoutData.address    = d.address_line1 || '';
+    checkoutData.address2   = d.address_line2 || '';
+    checkoutData.city       = d.city       || '';
+    checkoutData.state      = d.state      || '';
+    checkoutData.zip        = d.zip        || '';
+    checkoutData.country    = d.country    || 'United States';
+
+    // Contact display
+    var cName = [d.first_name, d.last_name].filter(Boolean).join(' ');
+    var cLines = [cName, d.email];
+    if (d.phone) cLines.push(d.phone);
+    document.getElementById('contact-display').innerHTML = cLines.map(function(l){ return '<div>'+esc(l)+'</div>'; }).join('');
+
+    // Address display
+    var addrEl = document.getElementById('address-display');
+    if (d.address_line1) {
+      var parts = [d.address_line1, d.address_line2, d.city, d.state, d.zip].filter(Boolean);
+      addrEl.innerHTML = '<div>'+esc(parts.join(', '))+'</div>' +
+        '<div style="font-size:13px;color:var(--t-text-muted);">'+esc(d.country||'United States')+'</div>';
+    } else {
+      addrEl.innerHTML = '<div style="font-size:13px;color:var(--t-text-muted);">No address on file. <button type="button" class="co-info-edit-btn" onclick="document.getElementById(\'btn-edit-address\').click()">Add one →</button></div>';
+    }
+
+    // Pre-fill li-* edit fields
+    document.getElementById('li-first').value = d.first_name || '';
+    document.getElementById('li-last').value  = d.last_name  || '';
+    document.getElementById('li-email').value = d.email      || '';
+    document.getElementById('li-phone').value = d.phone      || '';
+
+    document.getElementById('co-auth').style.display        = 'none';
+    document.getElementById('co-loggedin-blocks').style.display = 'block';
+    document.getElementById('guest-fields').style.display   = 'none';
+    document.getElementById('co-form-wrap').style.display   = 'block';
+
+    updateTotals();
+
+    // Auto-fetch shipping rates from saved ZIP
+    var zip = (d.zip || '').trim();
+    if (/^\d{5}/.test(zip)) triggerRates(zip);
+
+    // Run initial validation check for logged-in user
+    if (window._checkCanProceed) window._checkCanProceed();
+  }
+
+  function setupAuthGate() {
+    // Tab switching
+    document.getElementById('tab-signin').addEventListener('click', function(){
+      this.classList.add('active');
+      document.getElementById('tab-guest').classList.remove('active');
+      document.getElementById('auth-signin-body').style.display = 'block';
+      document.getElementById('auth-guest-body').style.display  = 'none';
+    });
+    document.getElementById('tab-guest').addEventListener('click', function(){
+      this.classList.add('active');
+      document.getElementById('tab-signin').classList.remove('active');
+      document.getElementById('auth-guest-body').style.display  = 'block';
+      document.getElementById('auth-signin-body').style.display = 'none';
+    });
+
+    // Continue as guest
+    document.getElementById('co-continue-guest').addEventListener('click', showGuestForm);
+
+    // Sign in form
+    document.getElementById('co-login-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      var msgEl = document.getElementById('co-login-msg');
+      var emailVal = document.getElementById('co-email-login').value.trim();
+      var passVal  = document.getElementById('co-pass-login').value;
+      if (!emailVal || !passVal) { showMsg(msgEl,'Please enter your email and password.',true); return; }
+
+      var btn = this.querySelector('button[type=submit]');
+      btn.disabled = true; btn.textContent = 'Signing in…';
+
+      var body = new FormData();
+      body.append('email', emailVal);
+      body.append('password', passVal);
+
+      fetch('api/login.php', { method:'POST', body:body })
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          btn.disabled = false; btn.textContent = 'Sign In';
+          if (!d.ok) { showMsg(msgEl, d.error||'Sign in failed.', true); return; }
+          // Logged in — fetch account data
+          msgEl.style.display = 'none';
+          return fetch('api/account.php').then(function(r){ return r.json(); }).then(function(d){
+            applyLoggedInState(d); // triggerRates already called inside applyLoggedInState
+            setupLoggedInEdits();
+          });
+        })
+        .catch(function(){
+          btn.disabled = false; btn.textContent = 'Sign In';
+          showMsg(msgEl, 'Connection error. Please try again.', true);
+        });
+    });
+  }
+
+  function showMsg(el, text, isErr) {
+    el.textContent = text;
+    el.style.display = 'block';
+    el.style.borderColor = isErr ? '#e05c5c' : 'var(--gold-warm)';
+    el.style.color = isErr ? '#e05c5c' : 'var(--t-text)';
+    el.style.background = isErr ? 'rgba(224,92,92,.06)' : 'rgba(212,160,23,.06)';
+  }
+
+  /* ── Logged-in edit handlers ─────────────── */
+  function setupLoggedInEdits() {
+    // Contact edit
+    document.getElementById('btn-edit-contact').addEventListener('click', function(){
+      document.getElementById('contact-edit-form').style.display = 'block';
+      this.style.display = 'none';
+    });
+    document.getElementById('btn-cancel-contact').addEventListener('click', function(){
+      document.getElementById('contact-edit-form').style.display = 'none';
+      document.getElementById('btn-edit-contact').style.display = '';
+    });
+    document.getElementById('btn-save-contact').addEventListener('click', function(){
+      checkoutData.first_name = document.getElementById('li-first').value.trim();
+      checkoutData.last_name  = document.getElementById('li-last').value.trim();
+      checkoutData.email      = document.getElementById('li-email').value.trim();
+      checkoutData.phone      = document.getElementById('li-phone').value.trim();
+      var cName = [checkoutData.first_name, checkoutData.last_name].filter(Boolean).join(' ');
+      var lines = [cName, checkoutData.email];
+      if (checkoutData.phone) lines.push(checkoutData.phone);
+      document.getElementById('contact-display').innerHTML = lines.map(function(l){ return '<div>'+esc(l)+'</div>'; }).join('');
+      document.getElementById('contact-edit-form').style.display = 'none';
+      document.getElementById('btn-edit-contact').style.display = '';
+      if (window._checkCanProceed) window._checkCanProceed();
+    });
+
+    // Address edit
+    document.getElementById('btn-edit-address').addEventListener('click', function(){
+      document.getElementById('address-edit-form').style.display = 'block';
+      this.style.display = 'none';
+    });
+    document.getElementById('btn-cancel-address').addEventListener('click', function(){
+      document.getElementById('address-edit-form').style.display = 'none';
+      document.getElementById('btn-edit-address').style.display = '';
+    });
+    document.getElementById('btn-save-address').addEventListener('click', function(){
+      var confirm = document.getElementById('li-addr-confirm');
+      if (!checkoutData.address) { confirm.textContent = 'Please select an address from the suggestions.'; confirm.style.display='block'; return; }
+      checkoutData.address2 = (document.getElementById('li-addr2').value||'').trim();
+      var parts = [checkoutData.address, checkoutData.address2, checkoutData.city, checkoutData.state, checkoutData.zip].filter(Boolean);
+      document.getElementById('address-display').innerHTML = '<div>'+esc(parts.join(', '))+'</div>'+
+        '<div style="font-size:13px;color:var(--t-text-muted);">'+esc(checkoutData.country)+'</div>';
+      document.getElementById('address-edit-form').style.display = 'none';
+      document.getElementById('btn-edit-address').style.display = '';
+      if (checkoutData.zip) {
+        document.getElementById('ship-zip').value = checkoutData.zip;
+        triggerRates(checkoutData.zip); // refresh shipping rates for new address
+      }
+      updateTotals();
+      if (window._checkCanProceed) window._checkCanProceed();
+    });
+  }
+
+  /* ── Shipping rate wiring ────────────────── */
+  function triggerRates(zip) {
+    if (!zip || !/^\d{5}/.test(zip)) return;
+    document.getElementById('ship-zip').value = zip;
+    fetchRates(zip);
+  }
+
+  function setupShipping() {
+    // Rates are triggered automatically when address ZIP is resolved — no manual button
+  }
+
+  /* ── Geoapify autocomplete ──────────────── */
+  var geoDropdown = null, geoTimer = null, geoActiveIdx = -1;
+
+  function createGeoDropdown(input) {
+    removeGeoDropdown();
+    var rect = input.getBoundingClientRect();
+    geoDropdown = document.createElement('div');
+    geoDropdown.id = 'geo-dropdown';
+    geoDropdown.style.top   = (rect.bottom + window.scrollY + 4) + 'px';
+    geoDropdown.style.left  = (rect.left   + window.scrollX)     + 'px';
+    geoDropdown.style.width = rect.width + 'px';
+    document.body.appendChild(geoDropdown);
+  }
+  function removeGeoDropdown() {
+    if (geoDropdown) { geoDropdown.remove(); geoDropdown = null; }
+    geoActiveIdx = -1;
+  }
+  function applyGeoResult(props, input, confirmEl, onSelect) {
+    var street  = [(props.housenumber||''),(props.street||'')].filter(Boolean).join(' ').trim();
+    var city    = props.city || props.county || '';
+    var state   = props.state_code || props.state || '';
+    var zip     = props.postcode || '';
+    var country = props.country || 'United States';
+    var fmt     = props.formatted || [street,city,state,zip].filter(Boolean).join(', ');
+
+    input.value = fmt;
+    if (onSelect) onSelect({ street:street, city:city, state:state, zip:zip, country:country, formatted:fmt });
+
+    if (confirmEl) {
+      confirmEl.textContent = '✓ ' + fmt;
+      confirmEl.style.display = 'block';
+    }
+    removeGeoDropdown();
+  }
+  function setupGeoInput(inputEl, confirmEl, onSelect) {
+    if (!inputEl) return;
+    inputEl.addEventListener('input', function(){
+      clearTimeout(geoTimer);
+      var q = inputEl.value.trim();
+      geoTimer = setTimeout(function(){
+        if (q.length < 3) { removeGeoDropdown(); return; }
+        var url = 'https://api.geoapify.com/v1/geocode/autocomplete?text='+encodeURIComponent(q)+
+                  '&filter=countrycode:us,ca,mx&limit=4&apiKey='+GEOKEY;
+        fetch(url).then(function(r){ return r.json(); }).then(function(data){
+          if (!data.features || !data.features.length) { removeGeoDropdown(); return; }
+          createGeoDropdown(inputEl);
+          geoActiveIdx = -1;
+          data.features.forEach(function(f){
+            var p = f.properties;
+            var line1 = [(p.housenumber||''),(p.street||'')].filter(Boolean).join(' ').trim() || p.formatted;
+            var line2 = [p.city||p.county, p.state_code, p.postcode].filter(Boolean).join(', ');
+            var item = document.createElement('div');
+            item.className = 'geo-item';
+            item.innerHTML = '<strong>'+esc(line1)+'</strong>'+(line2?'<span>'+esc(line2)+'</span>':'');
+            item.addEventListener('mousedown', function(e){
+              e.preventDefault();
+              applyGeoResult(p, inputEl, confirmEl, onSelect);
+            });
+            geoDropdown.appendChild(item);
+          });
+        }).catch(function(){ removeGeoDropdown(); });
+      }, 280);
+    });
+    inputEl.addEventListener('keydown', function(e){
+      if (!geoDropdown) return;
+      var items = geoDropdown.querySelectorAll('.geo-item');
+      if (e.key==='ArrowDown') { e.preventDefault(); geoActiveIdx=Math.min(geoActiveIdx+1,items.length-1); items.forEach(function(el,i){ el.classList.toggle('active',i===geoActiveIdx); }); }
+      else if (e.key==='ArrowUp') { e.preventDefault(); geoActiveIdx=Math.max(geoActiveIdx-1,0); items.forEach(function(el,i){ el.classList.toggle('active',i===geoActiveIdx); }); }
+      else if (e.key==='Enter' && geoActiveIdx>=0) { e.preventDefault(); items[geoActiveIdx].dispatchEvent(new MouseEvent('mousedown')); }
+      else if (e.key==='Escape') removeGeoDropdown();
+    });
+    inputEl.addEventListener('blur', function(){ setTimeout(removeGeoDropdown, 150); });
+  }
+
+  /* ── Init ────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', function(){
+    renderSummary();
+
+    // Check if cart empty (renderSummary replaces content if so)
+    if (!getCart().length) return;
+
+    // Set up place order button
+    document.getElementById('place-order-btn').addEventListener('click', doPlaceOrder);
+
+    // Shipping
+    setupShipping();
+
+    // Geoapify — guest address field
+    setupGeoInput(
+      document.getElementById('address-search'),
+      document.getElementById('address-confirm'),
+      function(r){
+        document.getElementById('address').value = r.street;
+        document.getElementById('city').value    = r.city;
+        document.getElementById('state').value   = r.state;
+        document.getElementById('zip').value     = r.zip;
+        document.getElementById('country').value = r.country;
+        triggerRates(r.zip);
+        updateTotals();
+        if (window._checkCanProceed) window._checkCanProceed();
+      }
+    );
+
+    // Geoapify — logged-in address change field
+    setupGeoInput(
+      document.getElementById('li-addr-search'),
+      document.getElementById('li-addr-confirm'),
+      function(r){
+        checkoutData.address = r.street;
+        checkoutData.city    = r.city;
+        checkoutData.state   = r.state;
+        checkoutData.zip     = r.zip;
+        checkoutData.country = r.country;
+      }
+    );
+
+    // Manual fallback wiring (if Geoapify unavailable)
+    function syncManual() {
+      document.getElementById('address').value = (document.getElementById('address-manual')||{value:''}).value;
+      document.getElementById('city').value    = (document.getElementById('city-manual')||{value:''}).value;
+      document.getElementById('state').value   = (document.getElementById('state-manual')||{value:''}).value;
+      document.getElementById('zip').value     = (document.getElementById('zip-manual')||{value:''}).value;
+      document.getElementById('country').value = (document.getElementById('country-manual')||{value:'United States'}).value;
+      var sz = document.getElementById('ship-zip');
+      var zm = document.getElementById('zip-manual');
+      if (sz && zm) sz.value = zm.value;
+      updateTotals();
+    }
+    ['address-manual','city-manual','state-manual','zip-manual','country-manual'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', function(){ syncManual(); checkCanProceed(); });
+    });
+
+    // ── Real-time validation ─────────────────────────────────
+    function checkCanProceed() {
+      var btn  = document.getElementById('place-order-btn');
+      var hint = document.getElementById('validation-hint');
+      if (!btn) return;
+
+      var missing = [];
+
+      if (!isLoggedIn) {
+        var fn = (document.getElementById('first-name')||{value:''}).value.trim();
+        var ln = (document.getElementById('last-name') ||{value:''}).value.trim();
+        var em = (document.getElementById('email')     ||{value:''}).value.trim();
+        var ad = (document.getElementById('address')   ||{value:''}).value.trim();
+        if (!fn) missing.push('First name');
+        if (!ln) missing.push('Last name');
+        if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) missing.push('Valid email');
+        if (!ad) missing.push('Delivery address');
+      } else {
+        if (!checkoutData.first_name) missing.push('First name');
+        if (!checkoutData.email)      missing.push('Email');
+        if (!checkoutData.address)    missing.push('Delivery address');
+      }
+
+      if (!selectedShipping) missing.push('Shipping rate');
+
+      if (missing.length === 0) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor  = 'pointer';
+        if (hint) hint.style.display = 'none';
+      } else {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor  = 'not-allowed';
+        if (hint) {
+          hint.style.display = 'block';
+          hint.textContent   = 'Still needed: ' + missing.join(', ') + '.';
+        }
+      }
+    }
+
+    // Attach validation listeners to guest fields
+    ['first-name','last-name','email'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', checkCanProceed);
+    });
+    // Address is set via Geoapify callback — checkCanProceed called there too
+    // Shipping rate selection — checkCanProceed called in rate radio change handler
+    window._checkCanProceed = checkCanProceed; // expose for rate selection callback
+
+    // Check session + account in parallel to eliminate sequential delay
+    Promise.all([
+      fetch('api/session.php').then(function(r){ return r.json(); }),
+      fetch('api/account.php').then(function(r){ return r.json(); }).catch(function(){ return {}; })
+    ]).then(function(results){
+      var s = results[0];
+      var d = results[1];
+      if (s.logged_in) {
+        applyLoggedInState(d); // triggerRates already called inside applyLoggedInState
+        setupLoggedInEdits();
+      } else {
+        document.getElementById('co-auth').style.display = 'block';
+        setupAuthGate();
+      }
+    }).catch(function(){
+      document.getElementById('co-auth').style.display = 'block';
+      setupAuthGate();
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
+
+
+
+

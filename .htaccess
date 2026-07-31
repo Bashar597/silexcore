@@ -1,0 +1,13 @@
+Options -Indexes
+
+# Block access to sensitive files at root
+<FilesMatch "\.(sql|log|env|json|md)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Block setup/test scripts
+<FilesMatch "^(admin-setup|admin-update|test-).*\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

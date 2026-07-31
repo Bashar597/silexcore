@@ -1,0 +1,106 @@
+<?php
+// ============================================================
+// SilexCore — Configuration TEMPLATE
+// ------------------------------------------------------------
+// Copy this file to `config.php` and fill in real values.
+// `config.php` is git-ignored and must NEVER be committed.
+// ============================================================
+
+// ── Database (cPanel › MySQL Databases) ────────────────────
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'your_db_name');
+define('DB_USER', 'your_db_user');
+define('DB_PASS', 'YOUR_DB_PASSWORD');
+
+// ── Zoho Payments (api-console.zoho.com) ───────────────────
+// Run the one-time OAuth flow to obtain the refresh token.
+define('ZOHO_CLIENT_ID',     'YOUR_ZOHO_CLIENT_ID');
+define('ZOHO_CLIENT_SECRET', 'YOUR_ZOHO_CLIENT_SECRET');
+define('ZOHO_ACCOUNT_ID',    'YOUR_ZOHO_ACCOUNT_ID');
+define('ZOHO_REFRESH_TOKEN', 'YOUR_ZOHO_REFRESH_TOKEN');
+define('ZOHO_API_KEY',       'YOUR_ZOHO_API_KEY');
+define('ZOHO_SIGNING_KEY',   'YOUR_ZOHO_WEBHOOK_SIGNING_KEY');
+
+// Returns a valid access token (auto-refreshes when expired or when the
+// refresh token changes). See config.php for the full implementation.
+function zoho_access_token(): string {
+    $cache  = __DIR__ . '/.zoho_token';
+    $rthash = substr(md5(ZOHO_REFRESH_TOKEN), 0, 12);
+    if (file_exists($cache)) {
+        $data = json_decode(file_get_contents($cache), true);
+        if (!empty($data['token'])
+            && ($data['expires'] ?? 0) > time() + 300
+            && ($data['rthash']  ?? '') === $rthash
+        ) {
+            return $data['token'];
+        }
+        @unlink($cache);
+    }
+    $ch = curl_init('https://accounts.zoho.com/oauth/v2/token');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => http_build_query([
+            'grant_type'    => 'refresh_token',
+            'client_id'     => ZOHO_CLIENT_ID,
+            'client_secret' => ZOHO_CLIENT_SECRET,
+            'refresh_token' => ZOHO_REFRESH_TOKEN,
+        ]),
+    ]);
+    $raw = curl_exec($ch);
+    curl_close($ch);
+    $resp = json_decode($raw, true);
+    if (empty($resp['access_token'])) {
+        error_log('Zoho token refresh failed: ' . $raw);
+        return '';
+    }
+    file_put_contents($cache, json_encode([
+        'token'   => $resp['access_token'],
+        'expires' => time() + (int)($resp['expires_in'] ?? 3600),
+        'rthash'  => $rthash,
+    ]));
+    return $resp['access_token'];
+}
+
+// ── EasyPost (Shipping) ────────────────────────────────────
+define('EASYPOST_API_KEY', 'YOUR_EASYPOST_PRODUCTION_KEY');
+
+// ── Email (SMTP) ───────────────────────────────────────────
+define('MAIL_HOST',     'mail.example.com');
+define('MAIL_PORT',     587);
+define('MAIL_USER',     'no-reply@example.com');
+define('MAIL_PASS',     'YOUR_SMTP_PASSWORD');
+define('MAIL_FROM',     'info@example.com');
+define('MAIL_FROM_NAME','Your Company');
+define('MAIL_COMPANY',  'info@example.com');
+
+// ── Helpers ────────────────────────────────────────────────
+function db(): PDO {
+    static $pdo;
+    if (!$pdo) {
+        $pdo = new PDO(
+            'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4',
+            DB_USER,
+            DB_PASS,
+            [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false,
+            ]
+        );
+    }
+    return $pdo;
+}
+
+function json_out(array $data, int $status = 200): never {
+    http_response_code($status);
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    exit;
+}
+
+function require_post(): void {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        json_out(['error' => 'Method not allowed'], 405);
+    }
+}

@@ -1,0 +1,38 @@
+# ============================================================
+#  SECRETS / CREDENTIALS — NEVER COMMIT THESE
+# ============================================================
+# DB, Zoho, EasyPost, SMTP secrets (see api/config.php.example)
+api/config.php
+# cached Zoho OAuth token
+api/.zoho_token
+# editor folder — contains sftp.json (FTP password)
+.vscode/
+# deploy credentials, wherever they appear
+sftp.json
+
+# ============================================================
+#  Throwaway debug / admin / setup tooling — not part of the app
+# ============================================================
+api/fixtoken.php
+api/clearcache.php
+api/seedorder.php
+api/diagship.php
+api/shiptest.php
+api/test-ship-email.php
+api/mailercheck.php
+api/zoho-callback.php
+admin-setup.php
+cleanorders.php
+updatename.php
+manualorder.php
+
+# ============================================================
+#  OS / editor / logs
+# ============================================================
+Thumbs.db
+ehthumbs.db
+.DS_Store
+*.log
+*.bak
+*.tmp
+node_modules/

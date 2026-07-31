@@ -1,0 +1,2 @@
+ALTER TABLE orders
+  ADD COLUMN IF NOT EXISTS label_url VARCHAR(500) DEFAULT NULL AFTER tracking_number;

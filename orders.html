@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order History — SilexCore Technologies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EDDGD4SLDZ"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EDDGD4SLDZ');</script>
+  <style>
+    @media print {
+      /* Hide everything except the receipt */
+      .site-header, .mobile-nav, .page-header, footer.site-footer,
+      .back-to-top, .cart-overlay, .cart-drawer, .no-print { display: none !important; }
+
+      body { background: #fff !important; color: #000 !important; }
+      section.section { padding: 20px 0 !important; }
+      .wrap { padding: 0 20px !important; }
+
+      /* Print header with branding */
+      #print-header { display: block !important; }
+
+      /* Clean table borders for print */
+      td, th { border-color: #ddd !important; }
+
+      /* Force white backgrounds */
+      div[style*="background"] { background: #f9f9f9 !important; }
+
+      /* Page break control */
+      .receipt-content { page-break-inside: avoid; }
+    }
+
+    /* Print header — hidden on screen, visible on print */
+    #print-header {
+      display: none;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #d4a017;
+    }
+    #print-header h2 { font-size: 20px; font-weight: 700; color: #d4a017; margin: 0; }
+    #print-header p  { font-size: 12px; color: #666; margin: 4px 0 0; }
+
+    /* Print button */
+    .print-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; background: var(--t-bg-2); border: 1px solid var(--t-border);
+      border-radius: 3px; font-size: 13px; color: var(--t-text); cursor: pointer;
+      font-family: inherit; transition: background 0.15s;
+    }
+    .print-btn:hover { background: var(--t-border); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand" aria-label="SilexCore Technologies home"><svg class="swoosh-svg" viewBox="0 0 48 32" fill="none" aria-hidden="true"><path d="M2 24 Q 14 4, 30 12 T 46 8" stroke="#e8b923" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="44" cy="9" r="2.5" fill="#e8b923"/></svg><span class="brand-text">SilexCore<span class="tech">Technologies</span></span></a>
+    <nav class="primary-nav" aria-label="Primary"><div class="nav-item has-dropdown"><a href="shop.html" class="nav-link">Products <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown dropdown-products"><a href="product-conductive-paint.html" class="dropdown-product"><strong>Conductive Paint</strong><span>0.1&ndash;0.5 &Omega;/sq</span></a><a href="product-premium-conductive-paint.html" class="dropdown-product"><strong>Premium Conductive Paint</strong><span>54 dB EMF shielding</span></a><a href="product-conductive-silicone.html" class="dropdown-product"><strong>Conductive Silicone</strong><span>5&ndash;35 &Omega;/sq</span></a><a href="product-conductive-glue.html" class="dropdown-product"><strong>Conductive Glue</strong><span>0.1&ndash;0.8 &Omega;/sq</span></a></div></div><div class="nav-item has-dropdown"><a href="shop.html" class="nav-link">Shop <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown"><a href="for-makers.html">For Makers &amp; DIY</a><a href="for-labs.html">For Education &amp; Labs</a><a href="for-industry.html">For Industry &amp; OEM</a></div></div><div class="nav-item has-dropdown"><a href="resources.html" class="nav-link">Learn <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown"><a href="resources.html#guides">Project Guides</a><a href="resources.html">Technical Library</a><a href="resources.html#sds">Safety Data Sheets</a></div></div><div class="nav-item has-dropdown"><a href="about.html" class="nav-link">About <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown"><a href="about.html">Company</a><a href="about.html">Technology</a><a href="about.html">Sustainability</a></div></div><div class="nav-item has-dropdown"><a href="faq.html" class="nav-link">Support <svg class="caret" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a><div class="dropdown"><a href="resources.html#guides">Usage Instructions</a><a href="resources.html#sds">Safety Data Sheets</a><a href="faq.html">FAQ</a><a href="shipping.html">Shipping &amp; Returns Policy</a><a href="returns.html">Returns</a><a href="contact.html">Contact</a></div></div></nav>
+    <div class="header-actions">
+      <a href="account.html" class="account-nav-btn" aria-label="Account"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="account-nav-label">Account</span></a>
+      <a href="#" class="cart-button" aria-label="Open cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>Cart <span class="cart-count">0</span></a>
+    </div>
+    <button class="mobile-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<nav class="mobile-nav" aria-label="Mobile"><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="for-makers.html">For Makers</a></li><li><a href="for-labs.html">For Labs</a></li><li><a href="for-industry.html">For Industry</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul><div class="mobile-actions"><a href="account.html">Account / Sign In</a><a href="#" class="cart-button">Cart (<span class="cart-count">0</span>)</a></div></nav>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><a href="account.html">Account</a><span class="sep">/</span><span>Order History</span></div>
+    <div class="t-eyebrow">My Orders</div>
+  </div>
+</div>
+
+<section class="section" style="padding-top:56px;background:var(--t-bg,#f5f3ee);">
+  <div class="wrap" style="max-width:760px;">
+
+    <div id="orders-loading" style="font-size:14px;color:var(--t-text-muted);">Loading your orders…</div>
+    <div id="orders-list" style="display:none;"></div>
+    <div id="orders-empty" style="display:none;">
+      <p style="font-size:15px;color:var(--t-text-muted);margin-bottom:24px;">You haven't placed any orders yet.</p>
+      <a href="shop.html" class="btn btn-gold">Shop Products <span class="arrow">→</span></a>
+    </div>
+    <div id="orders-auth" style="display:none;">
+      <p style="font-size:15px;color:var(--t-text-muted);margin-bottom:24px;">Please sign in to view your order history.</p>
+      <a href="account.html" class="btn btn-gold">Sign In <span class="arrow">→</span></a>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand"><a href="index.html" class="brand"><svg class="swoosh-svg" viewBox="0 0 48 32" fill="none" aria-hidden="true"><path d="M2 24 Q 14 4, 30 12 T 46 8" stroke="#e8b923" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="44" cy="9" r="2.5" fill="#e8b923"/></svg><span class="brand-text">SilexCore<span class="tech">Technologies</span></span></a><div class="brand-statement">Made in the<br><span>U.S.A.</span></div><div class="footer-contact">Charlotte, NC 28277<br><a href="tel:+17868165748">+1 (786) 816-5748</a><br><a href="mailto:info@silexcore.com">info@silexcore.com</a></div></div>
+      <div class="footer-col"><h4>Shop</h4><ul><li><a href="index.html">Home</a></li><li><a href="product-conductive-paint.html">Conductive Paint</a></li><li><a href="product-premium-conductive-paint.html">Premium Paint</a></li><li><a href="product-conductive-silicone.html">Conductive Silicone</a></li><li><a href="product-conductive-glue.html">Conductive Glue</a></li><li><a href="shop.html">All Products</a></li></ul></div>
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li><li><a href="account.html">Account</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+      <div class="footer-col"><h4>Resources</h4><ul><li><a href="resources.html#sds">Safety Data Sheets</a></li><li><a href="resources.html#guides">Usage Guides</a></li><li><a href="shipping.html">Shipping &amp; Returns Policy</a></li><li><a href="privacy.html">Privacy &amp; Terms</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 SilexCore Technologies · All Rights Reserved</div></div>
+    <div class="footer-disclaimer">SilexCore Technologies is a registered trademark.</div>
+  </div>
+</footer>
+
+<a href="#" class="back-to-top" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg></a>
+<div class="cart-overlay"></div>
+<aside class="cart-drawer" aria-label="Shopping cart"><div class="cart-header"><h3>Your Cart</h3><button class="cart-close" aria-label="Close cart"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="cart-body"></div><div class="cart-footer"><div class="cart-total"><span class="label">Subtotal</span><span class="amount">$0.00</span></div><a href="checkout.html" class="btn btn-gold cart-checkout">Checkout <span class="arrow">→</span></a></div></aside>
+
+<script src="assets/js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var params = new URLSearchParams(window.location.search);
+  var ref = params.get('ref');
+
+  fetch('api/session.php').then(function(r){ return r.json(); }).then(function(s) {
+    if (!s.logged_in) {
+      document.getElementById('orders-loading').style.display = 'none';
+      document.getElementById('orders-auth').style.display = 'block';
+      return;
+    }
+
+    fetch('api/my-orders.php').then(function(r){ return r.json(); }).then(function(d) {
+      document.getElementById('orders-loading').style.display = 'none';
+      if (!d.ok || !d.orders || !d.orders.length) {
+        document.getElementById('orders-empty').style.display = 'block';
+        return;
+      }
+
+      if (ref) {
+        // ── RECEIPT VIEW ───────────────────────────────────
+        var orderNum = params.get('n') || '';
+        var o = d.orders.find(function(x){ return x.reference === ref; });
+        if (!o) { document.getElementById('orders-empty').style.display = 'block'; return; }
+
+        var items = [];
+        try { items = JSON.parse(o.items_json); } catch(e) {}
+        var date = new Date(o.created_at).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+        var statusColor = o.status==='paid' ? '#1a7a3a' : '#a67800';
+        var statusBg    = o.status==='paid' ? '#e6f7ec' : '#fff8e6';
+
+        var trackSection = '';
+        if (!o.tracking_number && o.status === 'paid') {
+          trackSection = '<div style="background:#fff8e6;border-left:4px solid #d4a017;padding:14px 18px;border-radius:0 4px 4px 0;margin-bottom:24px;font-size:14px;color:#a67800;">Your order is being prepared for shipment. A tracking number will appear here once it ships.</div>';
+        }
+        if (o.tracking_number) {
+          var eta = o.estimated_delivery
+            ? '<div style="font-size:14px;color:#1a7a3a;margin-top:6px;font-weight:500;">Estimated delivery: ' + new Date(o.estimated_delivery).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) + '</div>'
+            : '';
+          trackSection = '<div style="background:#f9f7f2;border-left:4px solid var(--gold-warm);padding:18px 22px;border-radius:0 4px 4px 0;margin-bottom:24px;">' +
+            '<div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--t-text-muted);margin-bottom:6px;">Tracking Number</div>' +
+            '<div style="font-size:20px;font-family:monospace;font-weight:700;color:var(--t-text);margin-bottom:8px;">' + o.tracking_number + '</div>' +
+            '<a href="https://parcelsapp.com/en/tracking/' + encodeURIComponent(o.tracking_number) + '" target="_blank" style="display:inline-block;background:var(--gold-warm);color:#fff;padding:10px 22px;text-decoration:none;font-size:13px;border-radius:2px;font-weight:600;">Track My Package →</a>' +
+            eta + '</div>';
+        }
+
+        var itemRows = items.map(function(i){
+          return '<tr>' +
+            '<td style="padding:12px 0;border-bottom:1px solid var(--t-border);font-size:14px;color:var(--t-text);">' + i.name + '<br><span style="color:var(--t-text-muted);font-size:12px;">' + (i.variantLabel||'') + '</span></td>' +
+            '<td style="padding:12px 16px;border-bottom:1px solid var(--t-border);text-align:center;color:var(--t-text-muted);">' + i.qty + '</td>' +
+            '<td style="padding:12px 0;border-bottom:1px solid var(--t-border);text-align:right;font-weight:600;color:var(--t-text);">$' + ((parseFloat(i.price)||0)*(parseInt(i.qty,10)||1)).toFixed(2) + '</td>' +
+          '</tr>';
+        }).join('');
+
+        var tax = parseFloat(o.tax)||0;
+        var ship = parseFloat(o.shipping)||0;
+
+        var html =
+          // Print-only header (hidden on screen)
+          '<div id="print-header">' +
+          '<h2>SilexCore Technologies</h2>' +
+          '<p>Charlotte, NC 28277 &nbsp;·&nbsp; info@silexcore.com &nbsp;·&nbsp; +1 (786) 816-5748 &nbsp;·&nbsp; silexcore.com</p>' +
+          '</div>' +
+
+          // Top bar with back link + print button
+          '<div class="no-print" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">' +
+          '<a href="orders.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--t-text-muted);text-decoration:none;">← Back to Orders</a>' +
+          '<div style="display:flex;gap:10px;">' +
+          '<button class="print-btn" onclick="window.print()">' +
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>' +
+          'Print</button>' +
+          '<button class="print-btn" style="background:var(--gold-warm);border-color:var(--gold-warm);color:#fff;" onclick="exportPDF()">' +
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+          'Save as PDF</button>' +
+          '</div>' +
+          '</div>' +
+
+          '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">' +
+          '<div>' +
+          '<div style="font-size:22px;font-weight:700;color:var(--t-text);margin-bottom:4px;">' + (orderNum ? 'Order #' + orderNum : o.reference) + '</div>' +
+          '<div style="font-size:13px;color:var(--t-text-muted);margin-top:4px;">' + date + '</div>' +
+          '</div>' +
+          '<span style="padding:6px 16px;border-radius:20px;background:' + statusBg + ';color:' + statusColor + ';font-weight:600;font-size:13px;">' + o.status.toUpperCase() + '</span>' +
+          '</div>' +
+
+          trackSection +
+
+          '<div style="margin-bottom:24px;">' +
+          '<div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--t-text-muted);margin-bottom:12px;">Items Ordered</div>' +
+          '<table style="width:100%;border-collapse:collapse;">' +
+          '<thead><tr>' +
+          '<th style="text-align:left;font-size:11px;color:var(--t-text-muted);letter-spacing:0.08em;padding-bottom:10px;border-bottom:2px solid var(--t-border);">Product</th>' +
+          '<th style="text-align:center;font-size:11px;color:var(--t-text-muted);letter-spacing:0.08em;padding-bottom:10px;border-bottom:2px solid var(--t-border);padding:0 16px 10px;">Qty</th>' +
+          '<th style="text-align:right;font-size:11px;color:var(--t-text-muted);letter-spacing:0.08em;padding-bottom:10px;border-bottom:2px solid var(--t-border);">Price</th>' +
+          '</tr></thead><tbody>' + itemRows + '</tbody></table></div>' +
+
+          '<div style="background:var(--t-bg-2);border-radius:4px;padding:18px 20px;margin-bottom:24px;">' +
+          '<div style="display:flex;justify-content:space-between;font-size:14px;color:var(--t-text-2);padding:5px 0;">Subtotal<span>$' + parseFloat(o.subtotal).toFixed(2) + '</span></div>' +
+          (ship > 0 ? '<div style="display:flex;justify-content:space-between;font-size:14px;color:var(--t-text-2);padding:5px 0;">Shipping (' + (o.shipping_service||'') + ')<span>$' + ship.toFixed(2) + '</span></div>' : '') +
+          (tax > 0 ? '<div style="display:flex;justify-content:space-between;font-size:14px;color:var(--t-text-2);padding:5px 0;">Tax<span>$' + tax.toFixed(2) + '</span></div>' : '') +
+          '<div style="display:flex;justify-content:space-between;font-size:17px;font-weight:700;color:var(--t-text);border-top:1px solid var(--t-border);margin-top:8px;padding-top:12px;">Total<span>$' + parseFloat(o.total).toFixed(2) + '</span></div>' +
+          '</div>' +
+
+          '<div style="font-size:13px;color:var(--t-text-muted);line-height:1.7;">' +
+          '<div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Shipped To</div>' +
+          o.address_line1 + '<br>' + (o.address_line2 ? o.address_line2 + '<br>' : '') + o.city + ', ' + o.state + ' ' + o.zip + '<br>' + (o.country||'United States') +
+          '</div>';
+
+        document.getElementById('orders-list').innerHTML = html;
+        document.getElementById('orders-list').style.display = 'block';
+
+      } else {
+        // ── LIST VIEW ──────────────────────────────────────
+        var total = d.orders.length;
+        var html = '';
+        d.orders.forEach(function(o, i) {
+          var num = total - i; // oldest = #1, newest = #N
+          var date = new Date(o.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+          var statusColor = o.status==='paid' ? '#1a7a3a' : '#a67800';
+          var statusBg    = o.status==='paid' ? '#e6f7ec' : '#fff8e6';
+          html += '<a href="orders.html?ref=' + encodeURIComponent(o.reference) + '&n=' + num + '" style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid var(--t-border);text-decoration:none;gap:12px;">' +
+            '<div>' +
+            '<div style="font-size:15px;font-weight:700;color:var(--t-text);">Order #' + num + '</div>' +
+            '<div style="font-size:12px;color:var(--t-text-muted);margin-top:3px;">' + date + '</div>' +
+            '</div>' +
+            '<div style="display:flex;align-items:center;gap:12px;">' +
+            '<span style="font-size:12px;padding:3px 12px;border-radius:20px;background:' + statusBg + ';color:' + statusColor + ';font-weight:600;">' + o.status.toUpperCase() + '</span>' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t-text-muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+            '</div></a>';
+        });
+        document.getElementById('orders-list').innerHTML = html;
+        document.getElementById('orders-list').style.display = 'block';
+      }
+    });
+  });
+});
+
+function exportPDF() {
+  var btn = document.querySelector('[onclick="exportPDF()"]');
+  btn.textContent = 'Generating…';
+  btn.disabled = true;
+
+  var ph = document.getElementById('print-header');
+
+  // Build a clean standalone element for the PDF (no buttons/nav)
+  var src = document.getElementById('orders-list');
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'font-family:Arial,sans-serif;color:#222;padding:20px;background:#fff;';
+  wrapper.innerHTML = src.innerHTML;
+  // Show the print header inside the cloned content
+  var clonedHeader = wrapper.querySelector('#print-header');
+  if (clonedHeader) clonedHeader.style.display = 'block';
+
+  // Remove the top bar (back link + buttons) from the clone
+  var topBar = wrapper.querySelector('.no-print');
+  if (topBar) topBar.remove();
+
+  document.body.appendChild(wrapper);
+
+  html2pdf().set({
+    margin:      10,
+    filename:    'SilexCore-Receipt.pdf',
+    image:       { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, scrollY: 0, scrollX: 0 },
+    jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak:   { mode: ['avoid-all', 'css', 'legacy'] }
+  }).from(wrapper).save().then(function() {
+    document.body.removeChild(wrapper);
+    if (ph) ph.style.display = 'none';
+    btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Save as PDF';
+    btn.disabled = false;
+  });
+}
+</script>
+</body>
+</html>
+
+
+
+
+

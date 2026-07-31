@@ -1,0 +1,13 @@
+-- SilexCore — Profile & Password Reset fields
+-- Run this ONCE in phpMyAdmin → silexcor_store → Import
+
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS phone         VARCHAR(20)  DEFAULT NULL AFTER last_name,
+  ADD COLUMN IF NOT EXISTS address_line1 VARCHAR(255) DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS address_line2 VARCHAR(255) DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS city          VARCHAR(100) DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS state         VARCHAR(50)  DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS zip           VARCHAR(20)  DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS country       VARCHAR(100) DEFAULT 'United States',
+  ADD COLUMN IF NOT EXISTS reset_token   VARCHAR(64)  DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS reset_expires DATETIME     DEFAULT NULL;

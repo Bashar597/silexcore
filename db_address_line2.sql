@@ -1,0 +1,2 @@
+ALTER TABLE orders
+  ADD COLUMN IF NOT EXISTS address_line2 VARCHAR(255) NOT NULL DEFAULT '' AFTER address_line1;
