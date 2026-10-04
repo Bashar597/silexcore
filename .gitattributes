@@ -1,0 +1,5 @@
+# Surface PHP (the backend) as the primary language rather than static front-end assets.
+assets/**  linguist-vendored
+*.html     linguist-detectable=false
+*.css      linguist-detectable=false
+*.js       linguist-detectable=false
