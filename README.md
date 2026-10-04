@@ -4,8 +4,8 @@ A full-stack e-commerce web application for a conductive-materials brand, built 
 scratch: custom storefront, hosted payment checkout, real-time shipping rates and label
 purchasing, a customer accounts system, product reviews, and a full admin dashboard.
 
-> **Live production site.** This repository is the source code, published as a portfolio
-> reference. Secrets and deployment credentials are intentionally excluded (see
+> **Live production site:** [silexcore.com](https://silexcore.com/). This repository is the source code, published as a portfolio
+> reference for a project built by a team of six engineers. Secrets and deployment credentials are intentionally excluded (see
 > [Configuration](#configuration)).
 
 ---
@@ -74,4 +74,4 @@ Then create the database schema by running the `db_*.sql` files (start with
 
 ---
 
-*Built and maintained by the site owner. Published for portfolio purposes.*
+*Developed by a six-person engineering team at SilexCore Technologies. Published with permission for portfolio purposes.*
